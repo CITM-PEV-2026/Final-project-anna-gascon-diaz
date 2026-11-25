@@ -1,15 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CharacterController))]
 public class MovimientoJugadora : MonoBehaviour
 {
     [Header("Input")]
-    public InputActionReference moveAction;   // Player/Move
+    public InputActionReference moveAction;   // Para arrastrar el Player/Move
 
     [Header("Movimiento")]
-    public float velocidad = 4f;              // en la entrega final cambiará según el estado
-    public float velocidadGiro = 120f;
+    public float velocidad = 4f;              // metros por segundo al avanzar, en la entrega final cambiará según el estado
+    public float velocidadGiro = 120f;        // son los grados por segundo al girar
 
     CharacterController cc;
     float velocidadVertical;
@@ -27,10 +26,10 @@ public class MovimientoJugadora : MonoBehaviour
         // A/D gira, W/S avanza o retrocede
         transform.Rotate(0, input.x * velocidadGiro * Time.deltaTime, 0);
 
-        // gravedad sencilla
+        // gravedad sencilla. Si toca el suelo (isGrounded), la velocidad vertical es −1, un empujoncito hacia abajo. Si está en el aire, cada frame se le resta la gravedad (9,8 m/s²).
         velocidadVertical = cc.isGrounded ? -1f : velocidadVertical - 9.8f * Time.deltaTime;
 
-        Vector3 movimiento = transform.forward * input.y * velocidad + Vector3.up * velocidadVertical;
+        Vector3 movimiento = transform.forward * input.y * velocidad + Vector3.up * velocidadVertical; // transform.forward: hacia delante según hacia dónde mira el personaje.
         cc.Move(movimiento * Time.deltaTime);
     }
 }
